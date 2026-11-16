@@ -2127,6 +2127,13 @@
       animation:none!important;
       transition:none!important
     }
+    /* Decorative crowd: keep only the slow horizontal drift; drop leg/arm swing and bobbing. */
+    .walker {
+      animation:walk var(--d) linear var(--delay) infinite!important
+    }
+    .walker.rtl {
+      animation-name:walk-rtl!important
+    }
   }
   </style>
 </head>
