@@ -1411,9 +1411,41 @@
   .info-body p+p {
     margin-top:15px
   }
+  .booking-fab {
+    position:fixed;
+    right:calc(24px + env(safe-area-inset-right,0px));
+    bottom:calc(24px + env(safe-area-inset-bottom,0px));
+    z-index:40;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    min-height:56px;
+    padding:14px 22px;
+    border-radius:999px;
+    background:var(--orange);
+    color:var(--paper);
+    box-shadow:0 6px 24px #382b2433;
+    font-size:15px;
+    font-weight:600;
+    line-height:1.5;
+    transition:background .2s,transform .2s
+  }
+  .booking-fab:hover {
+    background:#923b1d;
+    transform:translateY(-2px)
+  }
+  .booking-fab:focus-visible {
+    outline:3px solid var(--brown);
+    outline-offset:4px
+  }
+  .booking-fab svg {
+    width:22px;
+    height:22px
+  }
   .toast-region {
     position:fixed;
-    bottom:24px;
+    bottom:calc(96px + env(safe-area-inset-bottom,0px));
     left:50%;
     transform:translateX(-50%);
     z-index:100;
@@ -1999,8 +2031,14 @@
     .success p {
       font-size:12px
     }
+    .booking-fab {
+      right:calc(16px + env(safe-area-inset-right,0px));
+      bottom:calc(16px + env(safe-area-inset-bottom,0px));
+      min-height:52px;
+      padding:12px 18px
+    }
     .toast-region {
-      bottom:18px
+      bottom:calc(84px + env(safe-area-inset-bottom,0px))
     }
     .toast {
       font-size:11px;
@@ -2080,6 +2118,10 @@
   <dialog id="checkout-dialog" class="modal" aria-labelledby="checkout-title"><div class="dialog-head"><h2 id="checkout-title">確認你的訂單<small>ONE STEP CLOSER TO SOMETHING GOOD</small></h2><button class="icon-btn" data-close="checkout-dialog" aria-label="關閉結帳" autofocus><i data-lucide="x" class="icon" aria-hidden="true"></i></button></div><div class="modal-body"><form id="checkout-form"><p class="modal-lead">這是一張示範訂單，無須付款。聯絡資訊僅暫存於本次表單，提交或關閉後清除。</p><fieldset class="fulfillment"><legend>用餐 / 配送方式</legend><div class="mode-options"><label><input type="radio" name="mode" value="dinein" required>內用</label><label><input type="radio" name="mode" value="takeaway" checked>外帶</label><label><input type="radio" name="mode" value="delivery" id="delivery-option">冷凍宅配</label></div><p id="mode-note" class="shipping-note"></p></fieldset><div id="pickup-fields"><label class="field">取餐門市<select id="pickup-store" name="store"><option value="0">大安旗艦店（示範）</option><option value="1">信義概念店（示範）</option><option value="2">中山日常店（示範）</option></select></label><label id="table-field" class="field" hidden>桌號<input id="table-number" name="table" maxlength="8" placeholder="例如：A03"></label><p class="shipping-note" style="margin-bottom:18px">正式訂單的備餐與取餐時間以門市確認為準。</p></div><div class="field-row"><label class="field">聯絡姓名 *<input id="customer-name" name="customer" autocomplete="name" required maxlength="40" placeholder="請輸入姓名"></label><label class="field">聯絡電話 *<input id="customer-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required pattern="[0-9+\(\)\s\-]{8,20}" maxlength="20" placeholder="例如：0912345678" title="請輸入 8–20 字元的電話號碼，可含 +、空白、括號或連字號"></label></div><label class="field">電子郵件（選填）<input name="email" type="email" autocomplete="email" maxlength="120" placeholder="hello@example.com"></label><label id="address-field" class="field" hidden>宅配地址 *<input id="customer-address" name="address" autocomplete="street-address" maxlength="160" placeholder="縣市、區域、街道與門牌"></label><label class="field">訂單備註（選填）<textarea name="note" rows="2" maxlength="300" placeholder="餐點需求或其他想告訴我們的事"></textarea></label><div class="checkout-summary"><div id="checkout-lines" class="checkout-lines"></div><div class="total-row"><span>商品小計</span><span id="checkout-subtotal"></span></div><div class="total-row"><span id="shipping-label">運費</span><span id="checkout-shipping"></span></div><div class="total-row grand"><span>訂單總額</span><strong id="checkout-total"></strong></div></div><label class="consent"><input type="checkbox" required><span>我了解這是功能展示，訂單不會傳送至門市，也不會產生付款或配送。</span></label><p id="checkout-error" class="form-error" role="alert"></p><button class="btn submit-order" type="submit">建立示範訂單 <i data-lucide="arrow-up-right" class="icon" aria-hidden="true"></i></button></form><div id="success-view" class="success" hidden tabindex="-1"><div class="success-icon"><i data-lucide="check" aria-hidden="true"></i></div><p class="eyebrow">Thank you. See you at the table.</p><h3>示範訂單已建立！</h3><span id="success-number" class="order-number"></span><p id="success-detail"></p><p>這是模擬結果，沒有送單、付款或安排配送。<br>謝謝你，和鍋淬一起把日常過得有滋有味。</p><button type="button" class="btn" data-close="checkout-dialog">繼續逛逛 <span aria-hidden="true">↗</span></button></div></div></dialog>
 
   <dialog id="info-dialog" class="modal" aria-labelledby="info-title"><div class="dialog-head"><h2 id="info-title">隱私權政策</h2><button class="icon-btn" data-close="info-dialog" aria-label="關閉說明" autofocus><i data-lucide="x" class="icon" aria-hidden="true"></i></button></div><div class="modal-body info-body" id="info-body"></div></dialog>
+  <a class="booking-fab" href="https://calendar.app.google/TProw199wJDXdmvN6" target="_blank" rel="noopener noreferrer" aria-label="立即預約（另開 Google 日曆預約頁面）">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18m-13 5 2 2 5-5"/></svg>
+    <span>立即預約</span>
+  </a>
   <div id="toast-region" class="toast-region" role="status" aria-live="polite" aria-atomic="true"></div>
   <noscript><div style="position:fixed;inset:auto 0 0;background:#382b24;color:white;padding:16px;text-align:center;z-index:200">請啟用 JavaScript 以使用菜單、購物車與模擬結帳。</div></noscript>
 
