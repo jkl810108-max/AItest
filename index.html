@@ -2202,7 +2202,7 @@
   <dialog id="cart-dialog" class="drawer" aria-labelledby="cart-title"><div class="dialog-head"><h2 id="cart-title">你的美味清單<small id="cart-subtitle">YOUR LITTLE MOMENTS OF JOY</small></h2><button class="icon-btn" data-close="cart-dialog" aria-label="關閉購物車" autofocus><i data-lucide="x" class="icon" aria-hidden="true"></i></button></div><div id="cart-list" class="cart-list"></div><div class="cart-footer"><div class="total-row"><span>商品小計</span><span id="cart-subtotal">NT$0</span></div><div class="total-row"><span>運費</span><span>依結帳取餐方式計算</span></div><div class="total-row grand"><span>目前合計</span><strong id="cart-total">NT$0</strong></div><p class="shipping-note">門市內用 / 外帶免運費。冷凍宅配 NT$160，商品滿 NT$1,200 免運；宅配限冷凍商品。</p><button class="btn" id="checkout-open" disabled>前往結帳 <i data-lucide="arrow-right" class="icon" aria-hidden="true"></i></button><p class="shipping-note" style="text-align:center">模擬訂單，不會付款或送單。</p></div></dialog>
 
   <!-- Checkout / Success reuse one dialog, retaining native focus management. -->
-  <dialog id="checkout-dialog" class="modal" aria-labelledby="checkout-title"><div class="dialog-head"><h2 id="checkout-title">確認你的訂單<small>ONE STEP CLOSER TO SOMETHING GOOD</small></h2><button class="icon-btn" data-close="checkout-dialog" aria-label="關閉結帳" autofocus><i data-lucide="x" class="icon" aria-hidden="true"></i></button></div><div class="modal-body"><form id="checkout-form"><p class="modal-lead">這是一張示範訂單，無須付款。聯絡資訊僅暫存於本次表單，提交或關閉後清除。</p><fieldset class="fulfillment"><legend>用餐 / 配送方式</legend><div class="mode-options"><label><input type="radio" name="mode" value="dinein" required>內用</label><label><input type="radio" name="mode" value="takeaway" checked>外帶</label><label><input type="radio" name="mode" value="delivery" id="delivery-option">冷凍宅配</label></div><p id="mode-note" class="shipping-note"></p></fieldset><div id="pickup-fields"><label class="field">取餐門市<select id="pickup-store" name="store"><option value="0">大安旗艦店（示範）</option><option value="1">信義概念店（示範）</option><option value="2">中山日常店（示範）</option></select></label><label id="table-field" class="field" hidden>桌號<input id="table-number" name="table" maxlength="8" placeholder="例如：A03"></label><p class="shipping-note" style="margin-bottom:18px">正式訂單的備餐與取餐時間以門市確認為準。</p></div><div class="field-row"><label class="field">聯絡姓名 *<input id="customer-name" name="customer" autocomplete="name" required maxlength="40" placeholder="請輸入姓名"></label><label class="field">聯絡電話 *<input id="customer-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required pattern="[0-9+\(\)\s\-]{8,20}" maxlength="20" placeholder="例如：0912345678" title="請輸入 8–20 字元的電話號碼，可含 +、空白、括號或連字號"></label></div><label class="field">電子郵件（選填）<input name="email" type="email" autocomplete="email" maxlength="120" placeholder="hello@example.com"></label><label id="address-field" class="field" hidden>宅配地址 *<input id="customer-address" name="address" autocomplete="street-address" maxlength="160" placeholder="縣市、區域、街道與門牌"></label><label class="field">訂單備註（選填）<textarea name="note" rows="2" maxlength="300" placeholder="餐點需求或其他想告訴我們的事"></textarea></label><div class="checkout-summary"><div id="checkout-lines" class="checkout-lines"></div><div class="total-row"><span>商品小計</span><span id="checkout-subtotal"></span></div><div class="total-row"><span id="shipping-label">運費</span><span id="checkout-shipping"></span></div><div class="total-row grand"><span>訂單總額</span><strong id="checkout-total"></strong></div></div><label class="consent"><input type="checkbox" required><span>我了解這是功能展示，訂單不會傳送至門市，也不會產生付款或配送。</span></label><p id="checkout-error" class="form-error" role="alert"></p><button class="btn submit-order" type="submit">建立示範訂單 <i data-lucide="arrow-up-right" class="icon" aria-hidden="true"></i></button></form><div id="success-view" class="success" hidden tabindex="-1"><div class="success-icon"><i data-lucide="check" aria-hidden="true"></i></div><p class="eyebrow">Thank you. See you at the table.</p><h3>示範訂單已建立！</h3><span id="success-number" class="order-number"></span><p id="success-detail"></p><p>這是模擬結果，沒有送單、付款或安排配送。<br>謝謝你，和鍋淬一起把日常過得有滋有味。</p><button type="button" class="btn" data-close="checkout-dialog">繼續逛逛 <span aria-hidden="true">↗</span></button></div></div></dialog>
+  <dialog id="checkout-dialog" class="modal" aria-labelledby="checkout-title"><div class="dialog-head"><h2 id="checkout-title">確認你的訂單<small>ONE STEP CLOSER TO SOMETHING GOOD</small></h2><button class="icon-btn" data-close="checkout-dialog" aria-label="關閉結帳" autofocus><i data-lucide="x" class="icon" aria-hidden="true"></i></button></div><div class="modal-body"><form id="checkout-form"><p class="modal-lead">這是一張示範訂單，無須付款。聯絡資訊僅暫存於本次表單，提交或關閉後清除。</p><fieldset class="fulfillment"><legend>用餐 / 配送方式</legend><div class="mode-options"><label><input type="radio" name="mode" value="dinein" required>內用</label><label><input type="radio" name="mode" value="takeaway" checked>外帶</label><label><input type="radio" name="mode" value="delivery" id="delivery-option">冷凍宅配</label></div><p id="mode-note" class="shipping-note"></p></fieldset><div id="pickup-fields"><label class="field">取餐門市<select id="pickup-store" name="store"><option value="0">大安旗艦店（示範）</option><option value="1">信義概念店（示範）</option><option value="2">中山日常店（示範）</option></select></label><label id="table-field" class="field" hidden>桌號<input id="table-number" name="table" maxlength="8" placeholder="例如：A03"></label><p class="shipping-note" style="margin-bottom:18px">正式訂單的備餐與取餐時間以門市確認為準。</p></div><div class="field-row"><label class="field">聯絡姓名 *<input id="customer-name" name="customer" autocomplete="name" required maxlength="40" placeholder="請輸入姓名"></label><label class="field">聯絡電話 *<input id="customer-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required pattern="[0-9+\(\)\s\-]{8,20}" maxlength="20" placeholder="例如：0912345678" title="請輸入 8–20 字元的電話號碼，可含 +、空白、括號或連字號"></label></div><label class="field">電子郵件（選填）<input name="email" type="email" autocomplete="email" maxlength="120" placeholder="hello@example.com"></label><label id="address-field" class="field" hidden>宅配地址 *<input id="customer-address" name="address" autocomplete="street-address" maxlength="160" placeholder="縣市、區域、街道與門牌"></label><label class="field">訂單備註（選填）<textarea name="note" rows="2" maxlength="300" placeholder="餐點需求或其他想告訴我們的事"></textarea></label><div class="checkout-summary"><div id="checkout-lines" class="checkout-lines"></div><div class="total-row"><span>商品小計</span><span id="checkout-subtotal"></span></div><div class="total-row"><span id="shipping-label">運費</span><span id="checkout-shipping"></span></div><div class="total-row grand"><span>訂單總額</span><strong id="checkout-total"></strong></div></div><input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0"><label class="consent"><input type="checkbox" required><span>我了解這是功能展示，訂單不會傳送至門市，也不會產生付款或配送。</span></label><p id="checkout-error" class="form-error" role="alert"></p><button class="btn submit-order" type="submit">建立示範訂單 <i data-lucide="arrow-up-right" class="icon" aria-hidden="true"></i></button></form><div id="success-view" class="success" hidden tabindex="-1"><div class="success-icon"><i data-lucide="check" aria-hidden="true"></i></div><p class="eyebrow">Thank you. See you at the table.</p><h3>示範訂單已建立！</h3><span id="success-number" class="order-number"></span><p id="success-detail"></p><p>這是模擬結果，沒有送單、付款或安排配送。<br>謝謝你，和鍋淬一起把日常過得有滋有味。</p><button type="button" class="btn" data-close="checkout-dialog">繼續逛逛 <span aria-hidden="true">↗</span></button></div></div></dialog>
 
   <dialog id="info-dialog" class="modal" aria-labelledby="info-title"><div class="dialog-head"><h2 id="info-title">隱私權政策</h2><button class="icon-btn" data-close="info-dialog" aria-label="關閉說明" autofocus><i data-lucide="x" class="icon" aria-hidden="true"></i></button></div><div class="modal-body info-body" id="info-body"></div></dialog>
   <a class="booking-fab" href="https://calendar.app.google/TProw199wJDXdmvN6" target="_blank" rel="noopener noreferrer" aria-label="線上預約（另開新視窗）"><i data-lucide="calendar-check"></i><span>預約</span></a>
@@ -2250,6 +2250,10 @@
     const currency = value => `NT$${value.toLocaleString('zh-TW')}`;
     const byId = id => products.find(product => product.id === id);
     const storageKey = 'guocui-demo-cart-v1';
+    // 貼上 Google Apps Script「網頁應用程式」網址（見 gas/README.md）。留空＝維持示範模式，不送出任何資料。
+    const ORDER_ENDPOINT = '';
+    const LIVE_ORDERS = /^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(ORDER_ENDPOINT);
+    let requestId = '';
     let cart = [];
     let activeStore = 0;
     let toastTimer;
@@ -2336,6 +2340,7 @@
       $('#checkout-form').reset(); $('#checkout-form').hidden = false; $('#success-view').hidden = true;
       $('#checkout-title').firstChild.textContent = '確認你的訂單';
       $('#checkout-error').textContent = ''; $('#pickup-store').value = String(activeStore);
+      requestId = (window.crypto?.randomUUID ? crypto.randomUUID() : 'r-' + Date.now().toString(36) + Math.random().toString(36).slice(2,10));
       $('#delivery-option').disabled = !isFrozenOnly();
       if(isFrozenOnly()) $('#delivery-option').checked = true;
       updateCheckout(); openDialog('checkout-dialog');
@@ -2381,23 +2386,48 @@
     });
     $('#cart-open').addEventListener('click',() => openDialog('cart-dialog'));
     $('#checkout-open').addEventListener('click',() => openCheckout($('#cart-open')));
+    if(LIVE_ORDERS) {
+      $('#checkout-form .modal-lead').textContent = '送出後訂單會直接傳給門市。你的姓名與聯絡方式僅用於確認與處理這筆訂單。';
+      $('#checkout-form .consent span').textContent = '我已確認訂單內容，並同意門市使用我填寫的聯絡資訊確認這筆訂單。';
+      $('#checkout-form .submit-order').firstChild.textContent = '送出訂單 ';
+      $('#success-view h3').textContent = '訂單已送出！';
+      $('#success-view p:last-of-type').innerHTML = '門市會透過你留下的聯絡方式與你確認訂單。<br>謝謝你，和鍋淬一起把日常過得有滋有味。';
+    }
     $('#checkout-form').addEventListener('change',updateCheckout);
     // Trimmed name/phone/address validation supplements the browser's required/pattern checks.
     $$('#checkout-form input').forEach(input => input.addEventListener('input',() => input.setCustomValidity('')));
-    $('#checkout-form').addEventListener('submit',event => {
-      event.preventDefault(); const form = event.currentTarget;
+    let sending = false;
+    $('#checkout-form').addEventListener('submit',async event => {
+      event.preventDefault(); const form = event.currentTarget; if(sending) return;
       const checks = [[$('#customer-name'),v => v.trim().length >= 1,'請輸入聯絡姓名。'],[$('#customer-phone'),v => v.replace(/\D/g,'').length >= 8,'請輸入至少 8 碼的有效電話。']];
       if(currentMode() === 'delivery') checks.push([$('#customer-address'),v => v.trim().length >= 6,'請填寫完整地址，至少 6 個字。']);
       if(currentMode() === 'dinein') checks.push([$('#table-number'),v => v.trim().length >= 1,'請填寫桌號。']);
       for(const [input,valid,message] of checks) input.setCustomValidity(valid(input.value) ? '' : message);
       if(!form.reportValidity()) return;
       if(!cart.length || (currentMode() === 'delivery' && !isFrozenOnly())) { $('#checkout-error').textContent = '商品或配送方式已變更，請返回購物車重新確認。'; return; }
-      const total = subtotal() + shipping();
+      let total = subtotal() + shipping();
+      let orderNo = '';
+      if(LIVE_ORDERS) {
+        const btn = $('.submit-order'), label = btn.firstChild.textContent;
+        sending = true; btn.disabled = true; btn.firstChild.textContent = '送出中… '; $('#checkout-error').textContent = '';
+        const ctrl = new AbortController(), timer = setTimeout(() => ctrl.abort(),25000);
+        try {
+          const payload = {mode:currentMode(),store:$('#pickup-store').value,table:$('#table-number').value,customer:$('#customer-name').value,phone:$('#customer-phone').value,email:form.elements.email.value,address:$('#customer-address').value,note:form.elements.note.value,website:form.elements.website.value,requestId,clientTotal:total,items:cart.map(({id,qty}) => ({id,qty}))};
+          // text/plain 屬於「簡單請求」，不會觸發 CORS 預檢，Apps Script 才收得到。
+          const res = await fetch(ORDER_ENDPOINT,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload),signal:ctrl.signal});
+          const data = await res.json();
+          if(!data.ok) throw Object.assign(new Error(data.message || '訂單送出失敗。'),{server:true});
+          orderNo = data.orderNo; total = data.total;
+        } catch(err) {
+          $('#checkout-error').textContent = err.server ? err.message : '網路異常，訂單可能尚未送出。請稍後再按一次送出；重試不會重複下單。';
+          return;
+        } finally { clearTimeout(timer); sending = false; btn.disabled = false; btn.firstChild.textContent = label; }
+      }
       const method = {dinein:'內用',takeaway:'外帶',delivery:'冷凍宅配'}[currentMode()];
       const destination = currentMode() === 'delivery' ? '' : ` · ${stores[Number($('#pickup-store').value)].name}`;
       const date = new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Taipei',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date()).replaceAll('-','');
       const random = window.crypto?.getRandomValues ? window.crypto.getRandomValues(new Uint32Array(1))[0].toString(36).slice(-5).toUpperCase() : Date.now().toString(36).slice(-5).toUpperCase();
-      $('#success-number').textContent = `DEMO-${date}-${random}`;
+      $('#success-number').textContent = orderNo || `DEMO-${date}-${random}`;
       $('#success-detail').textContent = `${method}${destination} · ${count()} 件商品 · 合計 ${currency(total)}`;
       cart = []; updateCartUI(); form.reset(); form.hidden = true; $('#success-view').hidden = false;
       $('#checkout-title').firstChild.textContent = '謝謝你的光臨'; $('#checkout-dialog').scrollTop = 0; $('#success-view').focus();
