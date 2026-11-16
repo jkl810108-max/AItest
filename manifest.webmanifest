@@ -1,0 +1,16 @@
+{
+  "name": "鍋淬 GUOCUI",
+  "short_name": "鍋淬",
+  "description": "鍋淬，一份手作的溫度。現煎鍋貼、精選水餃與冷凍禮盒，線上點餐與預約。",
+  "lang": "zh-Hant-TW",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#1e120c",
+  "theme_color": "#f7f3ec",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
