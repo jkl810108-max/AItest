@@ -2251,7 +2251,7 @@
     const byId = id => products.find(product => product.id === id);
     const storageKey = 'guocui-demo-cart-v1';
     // 貼上 Google Apps Script「網頁應用程式」網址（見 gas/README.md）。留空＝維持示範模式，不送出任何資料。
-    const ORDER_ENDPOINT = '';
+    const ORDER_ENDPOINT = 'https://script.google.com/macros/s/AKfycbyRsTxoSE3yI4ea9OGPR2AZ8cn-ggsM1iOTsX533VZUn16tx2eOCzFhX7re9G4JHoo/exec';
     const LIVE_ORDERS = /^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(ORDER_ENDPOINT);
     let requestId = '';
     let cart = [];
