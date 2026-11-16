@@ -2045,6 +2045,80 @@
       padding:12px 15px
     }
   }
+  .crowd {
+    position:relative;
+    height:104px;
+    overflow:hidden;
+    background:linear-gradient(var(--cream),var(--pale));
+    border-top:1px solid var(--line);
+    container-type:inline-size
+  }
+  .crowd:after {
+    content:'';
+    position:absolute;
+    inset:auto 0 0;
+    height:14px;
+    background:var(--line);
+    opacity:.7
+  }
+  .crowd-label {
+    position:absolute;
+    left:50%;
+    top:10px;
+    transform:translateX(-50%);
+    z-index:3;
+    font-size:10px;
+    letter-spacing:.3em;
+    color:var(--muted);
+    white-space:nowrap
+  }
+  .walker {
+    position:absolute;
+    left:0;
+    bottom:var(--b);
+    width:calc(24px*var(--s));
+    height:calc(48px*var(--s));
+    opacity:var(--o);
+    z-index:var(--z);
+    transform:translateX(calc(var(--p)*1cqw));
+    animation:walk var(--d) linear var(--delay) infinite
+  }
+  .walker svg {
+    width:100%;
+    height:100%;
+    overflow:visible;
+    animation:bob .55s ease-in-out infinite alternate
+  }
+  .walker.rtl svg {
+    transform:scaleX(-1)
+  }
+  .walker.rtl {
+    animation-name:walk-rtl
+  }
+  .walker .leg,.walker .arm {
+    transform-box:fill-box;
+    transform-origin:50% 0;
+    animation:swing .55s ease-in-out infinite alternate
+  }
+  .walker .leg.b,.walker .arm.b {
+    animation-direction:alternate-reverse
+  }
+  @keyframes walk {
+    from { transform:translateX(-60px) }
+    to { transform:translateX(calc(100cqw + 60px)) }
+  }
+  @keyframes walk-rtl {
+    from { transform:translateX(calc(100cqw + 60px)) }
+    to { transform:translateX(-60px) }
+  }
+  @keyframes swing {
+    from { rotate:-26deg }
+    to { rotate:26deg }
+  }
+  @keyframes bob {
+    from { translate:0 0 }
+    to { translate:0 -2px }
+  }
   @media(prefers-reduced-motion:reduce) {
     html {
       scroll-behavior:auto
@@ -2080,6 +2154,7 @@
       <div class="hero-copy"><p class="eyebrow">Handcrafted. Heartwarming.</p><h1 id="hero-title">把日常，<br>煎得<span>剛剛好。</span></h1><p class="hero-description">金黃的底，薄透的皮，藏著一口鮮甜。<br>把對食材的講究，包進每一次相聚。</p><div class="hero-buttons"><a href="#order" class="btn">線上點餐 <i data-lucide="arrow-up-right" class="icon" aria-hidden="true"></i></a><a href="#locations" class="btn btn-outline">探索門市 <i data-lucide="arrow-right" class="icon" aria-hidden="true"></i></a></div><div class="hero-bottom">GOOD FOOD. GOOD COMPANY.</div></div>
       <div class="hero-image media"><img src="https://i.postimg.cc/j2YmMLV1/Chat-GPT-Image-2026nian8yue9ri-xia-wu06-20-57.png" alt="木桌上黑色餐盤盛裝金黃煎餃的餐點示意照" fetchpriority="high"><div class="hero-seal" aria-hidden="true"><small>MADE WITH CARE</small>手作<br>有溫度</div><div class="hero-caption"><div>THE SIGNATURE<strong>一口酥脆，滿心鮮甜。</strong></div><span>餐點示意</span></div></div>
     </section>
+    <div class="crowd" id="crowd" aria-hidden="true"><span class="crowd-label">STREET · 人來人往</span></div>
     <div class="values-bar"><div class="wrap values"><div class="value"><i data-lucide="sprout" aria-hidden="true"></i><span>台灣在地・安心食材</span></div><div class="value"><i data-lucide="hand-heart" aria-hidden="true"></i><span>每日手包・新鮮製作</span></div><div class="value"><i data-lucide="flame" aria-hidden="true"></i><span>現點現煎・黃金脆底</span></div></div></div>
 
     <section id="story" class="section" aria-labelledby="story-title"><div class="wrap story-grid">
@@ -2357,6 +2432,29 @@
       '正式營運前，應提供真實的資料管理者、蒐集目的、法定告知事項、保存期限與聯絡管道，並串接安全的訂單、配送及訂閱服務。'
     ]));
     $('#store-phone').addEventListener('click',() => showInfo('門市聯絡資訊',['目前的電話為隱去號碼的設計示例，不提供撥號。正式上線前請填入正確電話，並設定電話連結。']));
+    // Decorative street crowd: purely visual, generated from fixed values only.
+    (function buildCrowd(){
+      const box = document.getElementById('crowd'); if (!box) return;
+      const colors = ['#b34e2a','#59634b','#382b24','#786d63','#c9803f','#6b4a3a'];
+      const skins = ['#e9c9a6','#d8aa82','#c08a64'];
+      const n = 16;
+      for (let i = 0; i < n; i++) {
+        const rtl = i % 2 === 1, front = i % 3 !== 0;
+        const c = colors[i % colors.length], k = skins[i % skins.length];
+        const el = document.createElement('div');
+        el.className = 'walker' + (rtl ? ' rtl' : '');
+        const st = el.style;
+        st.setProperty('--s', front ? 1.25 : .9);
+        st.setProperty('--b', front ? '4px' : '16px');
+        st.setProperty('--o', front ? 1 : .6);
+        st.setProperty('--z', front ? 2 : 1);
+        st.setProperty('--d', (front ? 16 : 24) + (i % 5) * 2 + 's');
+        st.setProperty('--delay', '-' + ((i * 3.7) % 20).toFixed(1) + 's');
+        st.setProperty('--p', Math.round((i * 37) % 100));
+        el.innerHTML = '<svg viewBox="0 0 24 48"><rect class="leg a" x="9" y="30" width="4" height="17" rx="2" fill="#382b24"/><rect class="leg b" x="12" y="30" width="4" height="17" rx="2" fill="#382b24"/><rect x="6" y="13" width="12" height="19" rx="6" fill="' + c + '"/><rect class="arm a" x="3" y="14" width="4" height="14" rx="2" fill="' + c + '"/><rect class="arm b" x="17" y="14" width="4" height="14" rx="2" fill="' + c + '"/><circle cx="12" cy="7" r="5.5" fill="' + k + '"/></svg>';
+        box.appendChild(el);
+      }
+    })();
     // Initialization and image/CDN graceful degradation.
     $('#year').textContent = new Date().getFullYear(); renderMenu('potstickers'); selectStore(0); updateCartUI(); bindImageFallbacks();
     window.addEventListener('load',refreshIcons);
