@@ -4,6 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f7f3ec">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="鍋淬">
   <meta name="description" content="鍋淬，一份手作的溫度。探索現煎鍋貼、精選水餃與冷凍禮盒，體驗線上點餐。">
   <title>鍋淬 GUOCUI｜把日常，煎得剛剛好。</title>
   <!-- 指定 CDN；核心排版另有內嵌 CSS，Tailwind 載入失敗時仍可操作。 -->
@@ -2462,6 +2467,8 @@
         box.appendChild(el);
       }
     })();
+    // PWA: register the service worker (needs https or localhost).
+    if ('serviceWorker' in navigator) window.addEventListener('load',() => navigator.serviceWorker.register('sw.js').catch(() => {}));
     // Initialization and image/CDN graceful degradation.
     $('#year').textContent = new Date().getFullYear(); renderMenu('potstickers'); selectStore(0); updateCartUI(); bindImageFallbacks();
     window.addEventListener('load',refreshIcons);
