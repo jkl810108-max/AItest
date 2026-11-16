@@ -14,6 +14,7 @@
   <!-- 指定 CDN；核心排版另有內嵌 CSS，Tailwind 載入失敗時仍可操作。 -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
+  <script src="https://unpkg.com/three@0.149.0/build/three.min.js" integrity="sha384-RRHfJ6w1mTlKUBMYT/hvnRiOzEB/vyRV3DrQOseb6oYfvaZSfdd0byS4bHps0k2R" crossorigin="anonymous" defer></script>
   <link rel="preconnect" href="https://images.unsplash.com">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -2066,6 +2067,20 @@
     background:var(--line);
     opacity:.7
   }
+  .crowd.is-3d {
+    height:clamp(230px,30vw,380px);
+    background:linear-gradient(#fbf6ec,#efe5d4 70%,#e3d6c0)
+  }
+  .crowd.is-3d:after {
+    display:none
+  }
+  .crowd canvas {
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    display:block
+  }
   .crowd-label {
     position:absolute;
     left:50%;
@@ -2474,8 +2489,157 @@
       '正式營運前，應提供真實的資料管理者、蒐集目的、法定告知事項、保存期限與聯絡管道，並串接安全的訂單、配送及訂閱服務。'
     ]));
     $('#store-phone').addEventListener('click',() => showInfo('門市聯絡資訊',['目前的電話為隱去號碼的設計示例，不提供撥號。正式上線前請填入正確電話，並設定電話連結。']));
-    // Decorative street crowd: purely visual, generated from fixed values only.
-    (function buildCrowd(){
+    // Decorative 3D street scene (three.js). Falls back to the 2D strip when WebGL or the CDN script is unavailable.
+    function buildCrowd3D() {
+      const box = document.getElementById('crowd');
+      if (!box || !window.THREE) return false;
+      const T = window.THREE;
+      let renderer;
+      try { renderer = new T.WebGLRenderer({antialias:true,alpha:true,powerPreference:'low-power'}); } catch { return false; }
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const timeScale = reduce ? .55 : 1;
+      renderer.setPixelRatio(Math.min(devicePixelRatio || 1,2));
+      renderer.setClearColor(0x000000,0);
+      box.appendChild(renderer.domElement);
+      box.classList.add('is-3d');
+
+      const scene = new T.Scene();
+      const camera = new T.PerspectiveCamera(36,3,.1,80);
+      const mat = (c,o = {}) => new T.MeshLambertMaterial(Object.assign({color:c},o));
+      const add = (geo,m,x,y,z,parent = scene) => { const o = new T.Mesh(geo,m); o.position.set(x,y,z); parent.add(o); return o; };
+
+      // Lights
+      scene.add(new T.HemisphereLight(0xfff1dc,0xa8957c,.72));
+      const sun = new T.DirectionalLight(0xffe2b8,.62); sun.position.set(-6,10,8); scene.add(sun);
+
+      // Ground: road, kerb, sidewalk
+      const DOOR_X = 0, WALL_Z = -2.6;
+      add(new T.PlaneGeometry(60,30),mat(0x6b625a),0,0,6.5).rotation.x = -Math.PI/2;
+      add(new T.BoxGeometry(60,.14,4.4),mat(0xc4b49b),0,.07,-0.4);
+      add(new T.BoxGeometry(60,.18,.22),mat(0xc3b49c),0,.09,1.9);
+      for (let x = -28; x <= 28; x += 3.2) add(new T.BoxGeometry(1.5,.02,.14),mat(0xe9e1cf),x,.011,5.2);
+
+      // Storefront
+      const shop = new T.Group(); scene.add(shop);
+      add(new T.BoxGeometry(8,3.6,.4),mat(0xdccdb2),0,1.8,WALL_Z-.2,shop);
+      add(new T.BoxGeometry(8.4,.35,.6),mat(0x382b24),0,3.75,WALL_Z,shop);
+      add(new T.BoxGeometry(1.5,2.4,.12),mat(0x2b1d15),DOOR_X,1.2,WALL_Z+.02,shop);
+      const doorGlow = add(new T.BoxGeometry(1.2,2.2,.05),new T.MeshBasicMaterial({color:0xffc872}),DOOR_X,1.15,WALL_Z+.1,shop);
+      for (const wx of [-2.6,2.6]) {
+        add(new T.BoxGeometry(2.2,1.5,.1),new T.MeshBasicMaterial({color:0xffd998}),wx,1.55,WALL_Z+.04,shop);
+        add(new T.BoxGeometry(2.4,.12,.16),mat(0x382b24),wx,.78,WALL_Z+.1,shop);
+      }
+      // Awning with stripes
+      for (let i = 0; i < 12; i++) {
+        const stripe = add(new T.BoxGeometry(8.2/12,.08,1.4),mat(i % 2 ? 0xf6efe2 : 0xb34e2a),-4.1+8.2/24+i*8.2/12,3.0,WALL_Z+.75,shop);
+        stripe.rotation.x = .28;
+      }
+      // Sign
+      const sign = document.createElement('canvas'); sign.width = 512; sign.height = 128;
+      const drawSign = () => { const g = sign.getContext('2d'); g.fillStyle = '#382b24'; g.fillRect(0,0,512,128); g.fillStyle = '#f7e3b0'; g.font = '700 74px "Noto Serif TC","PMingLiU",serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('鍋淬　現煎鍋貼',256,68); signTex.needsUpdate = true; };
+      const signTex = new T.CanvasTexture(sign);
+      add(new T.PlaneGeometry(3.4,.85),new T.MeshBasicMaterial({map:signTex}),0,3.75,WALL_Z+.32,shop);
+      drawSign(); document.fonts?.ready.then(drawSign);
+      // Warm light spilling from the doorway
+      const doorLight = new T.PointLight(0xffb55e,.6,7); doorLight.position.set(DOOR_X,1.6,WALL_Z+1.2); scene.add(doorLight);
+      // Street lamps and trees
+      for (const lx of [-6.5,6.5]) {
+        add(new T.CylinderGeometry(.05,.07,3.2,8),mat(0x3b3430),lx,1.7,1.5);
+        add(new T.SphereGeometry(.2,12,8),new T.MeshBasicMaterial({color:0xfff0c4}),lx,3.35,1.5);
+      }
+      for (const tx of [-9,9]) {
+        add(new T.CylinderGeometry(.1,.14,1.4,8),mat(0x6b4a3a),tx,.8,1.3);
+        add(new T.SphereGeometry(.9,14,10),mat(0x59634b),tx,2.2,1.3);
+      }
+
+      // People
+      const shirt = [0xb34e2a,0x59634b,0x382b24,0x786d63,0xc9803f,0x6b4a3a,0x3f6c8c,0xa3566b];
+      const skins = [0xf0d3b3,0xdcb08a,0xc08a64,0x8d5f3f];
+      const geo = {
+        torso:new T.CylinderGeometry(.2,.23,.62,10), head:new T.SphereGeometry(.15,14,10), hair:new T.SphereGeometry(.16,14,8,0,Math.PI*2,0,Math.PI/2),
+        limb:new T.CylinderGeometry(.065,.06,.62,8), leg:new T.CylinderGeometry(.09,.075,.8,8), shadow:new T.CircleGeometry(.34,16)
+      };
+      const shadowMat = new T.MeshBasicMaterial({color:0x000000,transparent:true,opacity:.2,depthWrite:false});
+      function makePerson(i) {
+        const g = new T.Group(), c = shirt[i % shirt.length], skin = skins[(i * 3) % skins.length], s = .92 + ((i * 7) % 5) * .05;
+        const pivot = (y,x) => { const p = new T.Group(); p.position.set(x,y,0); g.add(p); return p; };
+        const legL = pivot(.82,-.11), legR = pivot(.82,.11), armL = pivot(1.46,-.27), armR = pivot(1.46,.27);
+        for (const p of [legL,legR]) add(geo.leg,mat(0x2b2d3a),0,-.4,0,p);
+        for (const p of [armL,armR]) add(geo.limb,mat(c),0,-.3,0,p);
+        add(geo.torso,mat(c),0,1.15,0,g);
+        add(geo.head,mat(skin),0,1.64,0,g);
+        add(geo.hair,mat(i % 3 === 0 ? 0xc9c2b8 : 0x241a14),0,1.66,-.01,g);
+        const sh = add(geo.shadow,shadowMat,0,.145,0,g); sh.rotation.x = -Math.PI/2;
+        g.scale.setScalar(s); scene.add(g); g.visible = false;
+        return {g,legL,legR,armL,armR,s};
+      }
+
+      // Agents follow waypoint lists: pass by, walk into the shop, or walk out of it.
+      const LANES = [-.2,.5,1.1];
+      const EDGE = 15;
+      function planFor(a) {
+        const lane = LANES[Math.floor(Math.random()*LANES.length)], fromLeft = Math.random() < .5, kind = Math.random();
+        const sx = fromLeft ? -EDGE : EDGE, ex = -sx;
+        a.speed = (.9 + Math.random()*.6);
+        if (kind < .45) {              // walk in
+          const dx = DOOR_X + (Math.random()-.5)*.5;
+          a.path = [[sx,lane],[dx,lane],[dx,WALL_Z+.15]]; a.fate = 'enter';
+        } else if (kind < .7) {        // walk out
+          const dx = DOOR_X + (Math.random()-.5)*.5;
+          a.path = [[dx,WALL_Z+.15],[dx,lane],[ex,lane]]; a.fate = 'exit';
+        } else { a.path = [[sx,lane],[ex,lane]]; a.fate = 'pass'; }
+        a.pos = a.path[0].slice(); a.seg = 1; a.wait = 0; a.fade = 1;
+      }
+      const agents = [];
+      for (let i = 0; i < 12; i++) { const a = Object.assign(makePerson(i),{phase:Math.random()*6,wait:0}); planFor(a); a.g.visible = true; agents.push(a); }
+      let pulse = 0;
+      function stepAgent(a,dt) {
+        if (a.wait > 0) { a.wait -= dt; a.g.visible = false; if (a.wait <= 0) { planFor(a); a.g.visible = true; } return; }
+        const tgt = a.path[a.seg], dx = tgt[0]-a.pos[0], dz = tgt[1]-a.pos[1], dist = Math.hypot(dx,dz), stepLen = a.speed*dt;
+        if (dist <= stepLen) {
+          a.pos[0] = tgt[0]; a.pos[1] = tgt[1]; a.seg++;
+          if (a.seg >= a.path.length) { if (a.fate === 'enter') pulse = 1; a.wait = .4 + Math.random()*3.5; a.g.visible = false; return; }
+        } else { a.pos[0] += dx/dist*stepLen; a.pos[1] += dz/dist*stepLen; }
+        a.phase += dt*a.speed*5.2;
+        const sw = Math.sin(a.phase)*.7;
+        a.legL.rotation.x = sw; a.legR.rotation.x = -sw; a.armL.rotation.x = -sw*.8; a.armR.rotation.x = sw*.8;
+        const heading = Math.atan2(dx,dz); let d = heading - a.g.rotation.y; d = Math.atan2(Math.sin(d),Math.cos(d));
+        a.g.rotation.y += d*Math.min(1,dt*9);
+        a.g.position.set(a.pos[0],Math.abs(Math.sin(a.phase))*.035,a.pos[1]);
+        // Fade out as they step through the doorway / fade in as they come out.
+        const nearDoor = a.pos[1] < WALL_Z+.9 && Math.abs(a.pos[0]-DOOR_X) < .9;
+        a.g.scale.setScalar(a.s*(nearDoor ? Math.max(.001,(a.pos[1]-(WALL_Z+.1))/.8*.4+.6) : 1));
+      }
+      // Pre-roll so the street is already busy on first paint.
+      for (let t = 0; t < 120; t++) agents.forEach(a => stepAgent(a,.1));
+
+      function resize() {
+        const w = box.clientWidth, h = box.clientHeight || 1;
+        renderer.setSize(w,h,false);
+        const aspect = w/h; camera.aspect = aspect;
+        const vfov = camera.fov*Math.PI/180, halfW = 9.5, dist = Math.max(12,halfW/(Math.tan(vfov/2)*aspect));
+        camera.position.set(0,3.4+dist*.1,dist+2); camera.lookAt(0,1.45,-.5); camera.updateProjectionMatrix();
+      }
+      new ResizeObserver(resize).observe(box); resize();
+
+      let last = performance.now(), visible = true, raf = 0;
+      function frame(now) {
+        raf = 0; if (!visible || document.hidden) return;
+        const dt = Math.min(.05,(now-last)/1000)*timeScale; last = now;
+        agents.forEach(a => stepAgent(a,dt));
+        pulse = Math.max(0,pulse-dt*1.8);
+        doorLight.intensity = .6 + pulse*1.4; doorGlow.material.color.setRGB(1,.78+pulse*.18,.45+pulse*.3);
+        renderer.render(scene,camera);
+        raf = requestAnimationFrame(frame);
+      }
+      const kick = () => { if (!raf && visible && !document.hidden) { last = performance.now(); raf = requestAnimationFrame(frame); } };
+      new IntersectionObserver(es => { visible = es[0].isIntersecting; kick(); }).observe(box);
+      document.addEventListener('visibilitychange',kick);
+      renderer.domElement.addEventListener('webglcontextlost',e => { e.preventDefault(); });
+      kick(); return true;
+    }
+    // 2D fallback street crowd: purely visual, generated from fixed values only.
+    function buildCrowd2D(){
       const box = document.getElementById('crowd'); if (!box) return;
       const colors = ['#b34e2a','#59634b','#382b24','#786d63','#c9803f','#6b4a3a'];
       const skins = ['#e9c9a6','#d8aa82','#c08a64'];
@@ -2496,7 +2660,8 @@
         el.innerHTML = '<svg viewBox="0 0 24 48"><rect class="leg a" x="9" y="30" width="4" height="17" rx="2" fill="#382b24"/><rect class="leg b" x="12" y="30" width="4" height="17" rx="2" fill="#382b24"/><rect x="6" y="13" width="12" height="19" rx="6" fill="' + c + '"/><rect class="arm a" x="3" y="14" width="4" height="14" rx="2" fill="' + c + '"/><rect class="arm b" x="17" y="14" width="4" height="14" rx="2" fill="' + c + '"/><circle cx="12" cy="7" r="5.5" fill="' + k + '"/></svg>';
         box.appendChild(el);
       }
-    })();
+    }
+    window.addEventListener('load',() => { if (!buildCrowd3D()) buildCrowd2D(); });
     // PWA: register the service worker (needs https or localhost).
     if ('serviceWorker' in navigator) window.addEventListener('load',() => navigator.serviceWorker.register('sw.js').catch(() => {}));
     // Initialization and image/CDN graceful degradation.
